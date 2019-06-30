@@ -84,7 +84,7 @@ func newDBConnection(config MySQLConfig) (*mysqlDB, error) {
 		log.Println("Failed to prepare delete statement")
 		return nil, fmt.Errorf("mysql: prepare delete: %v", err)
 	}
-	log.Println("Returning the DB instance")
+	fmt.Println("Returning the DB instance")
 	return &databaseConn, nil
 }
 
@@ -101,12 +101,12 @@ func (config MySQLConfig) ensureTableExists(dbName string) error {
 	}
 
 	if _, err := conn.Exec("USE " + dbName); err != nil {
-		log.Println("Creating event_router_mapping DB and route_mapping Table")
+		fmt.Println("Creating event_router_mapping DB and route_mapping Table")
 		return createTable(conn)
 	}
 
 	if _, err := conn.Exec("DESCRIBE route_mapping"); err != nil {
-		log.Println("Found event_router_mapping DB. Creating route_mapping Table")
+		fmt.Println("Found event_router_mapping DB. Creating route_mapping Table")
 		return createTable(conn)
 	}
 	return nil

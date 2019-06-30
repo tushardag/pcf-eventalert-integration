@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -121,6 +120,6 @@ func (msg teamsOutgoingMsg) PostMessage(endpoint string) error {
 	if res.StatusCode >= 299 {
 		return fmt.Errorf("error on message: %s", res.Status)
 	}
-	log.Printf("Successfully posted the message to MSTeam. Response code: %s", res.Status)
+	fmt.Printf("Successfully posted the message to MSTeam. Response code: %s", res.Status)
 	return nil
 }

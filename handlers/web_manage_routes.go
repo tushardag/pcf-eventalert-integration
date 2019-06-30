@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -22,7 +23,7 @@ const (
 //CreatMapping PUT request to create new mapping into the route_mapping table
 func (rh *RequestHandler) CreatMapping(wr http.ResponseWriter, req *http.Request) {
 
-	log.Printf("Received a PUT request. Creating new route mapping entry.")
+	fmt.Printf("Received a PUT request. Creating new route mapping entry.")
 	vars := mux.Vars(req)
 	if !strings.Contains(supportedTypes, vars["type"]) {
 		log.Printf("Invalid Entry type received. Type received: " + vars["type"])
@@ -61,7 +62,7 @@ func (rh *RequestHandler) CreatMapping(wr http.ResponseWriter, req *http.Request
 	}
 	//wr.Header().Set("Content-Type", "application/json")
 	wr.WriteHeader(http.StatusOK)
-	log.Printf("Successfully added a new mapping entry for " + route.Identifier + " with type as " + route.RouteType)
+	fmt.Printf("Successfully added a new mapping entry for " + route.Identifier + " with type as " + route.RouteType)
 	return
 }
 
@@ -81,6 +82,6 @@ func (rh *RequestHandler) RemoveMapping(wr http.ResponseWriter, req *http.Reques
 		http.Error(wr, "Internal server error. Please check the logs for more information", http.StatusInternalServerError)
 		return
 	}
-	log.Printf("Successfully removed " + vars["type"] + " mapping for identifier " + vars["identifier"])
+	fmt.Printf("Successfully removed " + vars["type"] + " mapping for identifier " + vars["identifier"])
 	return
 }

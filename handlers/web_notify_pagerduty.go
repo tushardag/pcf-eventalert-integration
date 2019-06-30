@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -35,8 +36,8 @@ func (rh *RequestHandler) PagerDutyAlert(w http.ResponseWriter, r *http.Request)
 	}
 
 	// fmt.Fprint(w, "Value of Person in function :", incomingMsg)
-	log.Printf("%s EventAlert message received for: %s", incomingMsg.Metadata.Status, incomingMsg.Metadata.EventDescription)
-
+	fmt.Printf("%s EventAlert message received for: %s", incomingMsg.Metadata.Status, incomingMsg.Metadata.EventDescription)
+	fmt.Println("Publishing message to PagerDuty " + vars["identifier"])
 	//Building the message body to post a call for MSTeams webhook
 	//Reference fields https://docs.microsoft.com/en-us/outlook/actionable-messages/card-reference
 	err = helpers.CompilePagerDutyMessage(incomingMsg, route.PostURL).CreateIncident()

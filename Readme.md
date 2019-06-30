@@ -5,6 +5,33 @@
 ## Getting Started
 ### Running on [Pivotal Web Services](https://run.pivotal.io/)
 
+Log in to CF
+```
+cf login -a https://api.run.pivotal.io
+```
+
+Target your org / space. 
+```
+cf target -o myorg -s myspace
+```
+
+Make sure mysql service is available. To enable the service, follow [MySQL for PCF Service Availability](https://docs.pivotal.io/p-mysql/2-5/use.html#marketplace)
+Sign up for a mysql instance.
+```
+cf create-service p.mysql db-small paas-mysql
+```
+
+Push the app. Its manifest assumes you called your mysql instance 'paas-mysql'. Change it in manifest if otherwise. 
+```
+cf push 
+```
+
+Export the test host
+```
+export HOST=https://eventalert-integration.mysubdomain.cfapps.io
+```
+Now follow the [interaction instructions](#interaction-instructions).
+
 
 ### Running locally
 The following assumes you have a working, recent version of Go installed, and you have a properly set-up Go workspace.

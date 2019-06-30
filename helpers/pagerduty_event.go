@@ -87,6 +87,6 @@ func (pd pdOutgoingMsg) CreateIncident() error {
 		log.Printf("PD Request: %s", enc)
 		return fmt.Errorf("error in posting incident to PD: %s", res.Status)
 	}
-	log.Printf("Successfully posted the message to PagerDuty. Response code: %s", res.Status)
+	fmt.Printf("Successfully posted the message to PagerDuty. Response code: %s", res.Status)
 	return nil
 }

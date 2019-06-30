@@ -16,19 +16,19 @@ import (
 )
 
 func main() {
-	log.Printf("Starting up the pcf-eventalert-integration server...")
-	log.Printf("Connecting to the EventRouteMapping DB and initializing the base")
+	fmt.Println("Starting up the pcf-eventalert-integration server...")
+	fmt.Println("Connecting to the EventRouteMapping DB and initializing the base")
 	// For the local instance of mysql, update the username,
 	// password and instance connection string. When running locally,
 	// localhost:3306 is used
 	mysqlDBconfig, err := configureMySQL()
-	log.Printf("Connecting to MySQL Host %s on port %d \n", mysqlDBconfig.Host, mysqlDBconfig.Port)
+	fmt.Printf("Connecting to MySQL Host %s on port %d \n", mysqlDBconfig.Host, mysqlDBconfig.Port)
 	requestHandler, err := handlers.RequestHandlerInit(mysqlDBconfig)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	defer requestHandler.CloseDB()
-	log.Printf("Initializing the webserver process.")
+	fmt.Println("Initializing the webserver process.")
 	router := mux.NewRouter()
 
 	// list out the routes and usages information
@@ -67,7 +67,7 @@ func main() {
 		if err != nil {
 			return err
 		}
-		log.Printf("Enabling route: %s for method %s\n", path, method)
+		fmt.Printf("Enabling route: %s for method %s\n", path, method)
 		return nil
 	})
 
@@ -88,9 +88,9 @@ func main() {
 	go func() {
 		sig := <-gracefulStop
 		log.Printf("caught sig: %+v", sig)
-		log.Println("Wait for 2 second to finish processing")
+		fmt.Println("Wait for 2 second to finish processing")
 		time.Sleep(2 * time.Second)
-		log.Println("Shutting down the server process")
+		fmt.Println("Shutting down the server process")
 		os.Exit(0)
 	}()
 
@@ -137,7 +137,7 @@ func configureMySQL() (handlers.MySQLConfig, error) {
 		}
 		// Assumes only a single MySQLDB is bound to this application
 		creds := info[0].Credentials
-		//log.Println(creds)
+		//fmt.Println(creds)
 		return handlers.MySQLConfig{
 			Username: creds.User,
 			Password: creds.Password,

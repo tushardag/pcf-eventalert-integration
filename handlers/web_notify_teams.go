@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -36,11 +37,11 @@ func (rh *RequestHandler) MSTeamsAlert(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// fmt.Fprint(w, "Value of Person in function :", incomingMsg)
-	log.Printf("EventAlert message received for: %s", incomingMsg.Metadata.EventDescription)
+	fmt.Printf("EventAlert message received for: %s", incomingMsg.Metadata.EventDescription)
 
 	//Building the message body to post a call for MSTeams webhook
 	//Reference fields https://docs.microsoft.com/en-us/outlook/actionable-messages/card-reference
-	log.Println("Publishing message to Teams " + vars["identifier"])
+	fmt.Println("Publishing message to Teams " + vars["identifier"])
 	if err := helpers.CompileTeamsMessage(incomingMsg).PostMessage(route.PostURL); err != nil {
 		log.Printf("Error in publishing message to Teams: %s\n", err)
 		http.Error(w, "Unable to publish message to Teams", http.StatusInternalServerError)

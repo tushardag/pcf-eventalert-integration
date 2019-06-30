@@ -1,6 +1,9 @@
 package handlers
 
-import "log"
+import (
+	"fmt"
+	"log"
+)
 
 //RequestHandler : Application-wide configuration to allow passing already established DB interface
 type RequestHandler struct {
@@ -16,13 +19,13 @@ func RequestHandlerInit(config MySQLConfig) (*RequestHandler, error) {
 		log.Println("Unable to get DB connection")
 		return nil, err
 	}
-	log.Println("Successfully established DB connection")
-	//log.Println(dbConn)
+	fmt.Println("Successfully established DB connection")
+	//fmt.Println(dbConn)
 	return &rh, nil
 }
 
 //CloseDB : Free up the DB resource
 func (rh *RequestHandler) CloseDB() {
-	log.Println("Closing the DB connection.")
+	fmt.Println("Closing the DB connection.")
 	rh.dbConn.close()
 }
