@@ -70,7 +70,7 @@ $GOPATH/bin/pcf-eventalert-integration
 
 4. Export the test host in another shell, where you can then run the interactions:
 ```
-export APPLINK=http://localhost:3000
+export APPLINK=http://localhost:8080
 ```
 
 Now follow the [interaction instructions](#interaction-instructions).
