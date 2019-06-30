@@ -1,9 +1,9 @@
 ---
 applications:
-- name: webhook-handler
+- name: pcf-eventalert-integration 
   instances: 1
   memory: 256MB
-  host: go-to-web
-  buildpack: https://github.com/cloudfoundry/go-buildpack.git
+  services:
+    - paas-mysql
   env:
-    GOPACKAGENAME : webhook-handler
+    GOPACKAGENAME : pcf-eventalert-integration 

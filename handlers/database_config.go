@@ -101,10 +101,12 @@ func (config MySQLConfig) ensureTableExists(dbName string) error {
 	}
 
 	if _, err := conn.Exec("USE " + dbName); err != nil {
+		log.Println("Creating event_router_mapping DB and route_mapping Table")
 		return createTable(conn)
 	}
 
 	if _, err := conn.Exec("DESCRIBE route_mapping"); err != nil {
+		log.Println("Found event_router_mapping DB. Creating route_mapping Table")
 		return createTable(conn)
 	}
 	return nil

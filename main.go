@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -20,12 +21,8 @@ func main() {
 	// For the local instance of mysql, update the username,
 	// password and instance connection string. When running locally,
 	// localhost:3306 is used
-	requestHandler, err := handlers.RequestHandlerInit(handlers.MySQLConfig{
-		Username: "mapper",
-		Password: "mapper",
-		Host:     "localhost",
-		Port:     3306,
-	})
+	mysqlDBconfig, err := configureMySQL()
+	requestHandler, err := handlers.RequestHandlerInit(mysqlDBconfig)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -109,4 +106,50 @@ func getPort() string {
 		return "8080"
 	}
 	return port
+}
+
+type mysqlDBInfo struct {
+	Credentials mysqlDBCredentials `json:"credentials"`
+}
+
+type mysqlDBCredentials struct {
+	Host     string `json:"host"`
+	Port     int    `json:"port"`
+	User     string `json:"user"`
+	Password string `json:"password"`
+}
+
+func configureMySQL() (handlers.MySQLConfig, error) {
+	if os.Getenv("VCAP_SERVICES") != "" {
+		// Running in PCF.
+		s := os.Getenv("VCAP_SERVICES")
+		services := make(map[string][]mysqlDBInfo)
+		err := json.Unmarshal([]byte(s), &services)
+		if err != nil {
+			log.Printf("Error parsing MySQL connection information: %v\n", err.Error())
+			return handlers.MySQLConfig{}, err
+		}
+		info := services["p.mysql"]
+		if len(info) == 0 {
+			log.Printf("No MySQL databases are bound to this application.\n")
+			return handlers.MySQLConfig{}, fmt.Errorf("unable to find service with name p.mysql")
+		}
+		// Assumes only a single MySQLDB is bound to this application
+		creds := info[0].Credentials
+
+		return handlers.MySQLConfig{
+			Username: creds.User,
+			Password: creds.Password,
+			Host:     creds.Host,
+			Port:     creds.Port,
+		}, nil
+	}
+
+	// Running locally.
+	return handlers.MySQLConfig{
+		Username: "mapper",
+		Password: "mapper",
+		Host:     "localhost",
+		Port:     3306,
+	}, nil
 }
