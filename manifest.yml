@@ -1,0 +1,9 @@
+---
+applications:
+- name: webhook-handler
+  instances: 1
+  memory: 256MB
+  host: go-to-web
+  buildpack: https://github.com/cloudfoundry/go-buildpack.git
+  env:
+    GOPACKAGENAME : webhook-handler
