@@ -12,16 +12,17 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/tushardag/webhook-handler/handlers"
+	"github.com/tushardag/pcf-eventalert-integration/handlers"
 )
 
 func main() {
-	log.Printf("Starting up the webhook-handler server...")
+	log.Printf("Starting up the pcf-eventalert-integration server...")
 	log.Printf("Connecting to the EventRouteMapping DB and initializing the base")
 	// For the local instance of mysql, update the username,
 	// password and instance connection string. When running locally,
 	// localhost:3306 is used
 	mysqlDBconfig, err := configureMySQL()
+	log.Printf("Connecting to MySQL Host %s on port %d \n", mysqlDBconfig.Host, mysqlDBconfig.Port)
 	requestHandler, err := handlers.RequestHandlerInit(mysqlDBconfig)
 	if err != nil {
 		log.Fatalln(err)
@@ -95,7 +96,7 @@ func main() {
 
 	//Starting the webserver
 	if err := server.ListenAndServe(); err != nil {
-		log.Printf("Unable to start the webhook-handler server.")
+		log.Printf("Unable to start the pcf-eventalert-integration server.")
 		log.Fatalln(err)
 	}
 }
@@ -113,9 +114,9 @@ type mysqlDBInfo struct {
 }
 
 type mysqlDBCredentials struct {
-	Host     string `json:"host"`
+	Host     string `json:"hostname"`
 	Port     int    `json:"port"`
-	User     string `json:"user"`
+	User     string `json:"username"`
 	Password string `json:"password"`
 }
 
@@ -136,7 +137,7 @@ func configureMySQL() (handlers.MySQLConfig, error) {
 		}
 		// Assumes only a single MySQLDB is bound to this application
 		creds := info[0].Credentials
-
+		//log.Println(creds)
 		return handlers.MySQLConfig{
 			Username: creds.User,
 			Password: creds.Password,

@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-//Index : Default landing to provide list of existing mappings and sample requests
+//ListMappings : Default landing to provide list of existing mappings and sample requests
 func (rh *RequestHandler) ListMappings(w http.ResponseWriter, r *http.Request) {
 	routes, err := rh.dbConn.listRoutes()
 	if err != nil {

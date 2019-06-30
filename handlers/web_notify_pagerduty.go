@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/tushardag/webhook-handler/helpers"
+	"github.com/tushardag/pcf-eventalert-integration/helpers"
 )
 
 const (

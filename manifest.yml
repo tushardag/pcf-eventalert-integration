@@ -1,9 +1,10 @@
 ---
 applications:
-- name: pcf-eventalert-integration 
+- name: eventalert-integration 
   instances: 1
   memory: 256MB
   services:
     - paas-mysql
   env:
-    GOPACKAGENAME : pcf-eventalert-integration 
+    GOPACKAGENAME : eventalert-integration 
+    GOVERSION: go1.12.4

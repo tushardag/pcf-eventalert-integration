@@ -35,10 +35,10 @@ Query OK, 0 rows affected (0.004 sec)
 
 3. Install and start the application server
 ```
-go get github.com/tushardag/webhook-handler
-cd $GOPATH/src/github.com/webhook-handler
+go get github.com/tushardag/pcf-eventalert-integration
+cd $GOPATH/src/github.com/pcf-eventalert-integration
 go install
-$GOPATH/bin/webhook-handler
+$GOPATH/bin/pcf-eventalert-integration
 ```
 
 4. Export the test host in another shell, where you can then run the interactions:
