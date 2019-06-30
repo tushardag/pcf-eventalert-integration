@@ -7,7 +7,7 @@
 
 Log in to CF
 ```
-cf login -a https://api.run.pivotal.io
+cf login -a https://api.sys.myfoundation.mydomain.com
 ```
 
 Target your org / space. 
@@ -28,7 +28,7 @@ cf push
 
 Export the test host
 ```
-export HOST=https://eventalert-integration.mysubdomain.cfapps.io
+export HOST=https://eventalert-integration.myfoundation.mydomain.com
 ```
 Now follow the [interaction instructions](#interaction-instructions).
 
