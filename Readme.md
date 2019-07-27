@@ -7,7 +7,7 @@
 
 Log in to CF
 ```
-cf login -a https://api.run.pivotal.io
+cf login -a https://api.sys.myfoundation.mydomain.com
 ```
 
 Target your org / space. 
@@ -28,7 +28,7 @@ cf push
 
 Export the test host
 ```
-export HOST=https://eventalert-integration.mysubdomain.cfapps.io
+export HOST=https://eventalert-integration.myfoundation.mydomain.com
 ```
 Now follow the [interaction instructions](#interaction-instructions).
 
@@ -70,24 +70,34 @@ $GOPATH/bin/pcf-eventalert-integration
 
 4. Export the test host in another shell, where you can then run the interactions:
 ```
-export APPLINK=http://localhost:3000
+export APPLINK=http://localhost:8080
 ```
 
 Now follow the [interaction instructions](#interaction-instructions).
 
 ## Interaction instructions
 Start by creating the route mapping either for MS Teams or for PagerDuty (HTTP 200 response code is expected)
-`curl -v -H "Content-Type: application/json" -X PUT $APPLINK/teams/testIdentifier -d '{"URL": "https://outlook.office.com/webhook/9876-xyz/IncomingWebhook/1234/abc","Description": "Sample Teams Incoming webhook link"}'`
+```
+curl -v -H "Content-Type: application/json" -X PUT $APPLINK/teams/testIdentifier -d '{"URL": "https://outlook.office.com/webhook/9876-xyz/IncomingWebhook/1234/abc","Description": "Sample Teams Incoming webhook link"}'
+```
 OR
-`curl -v -H "Content-Type: application/json" -X PUT $APPLINK/pagerduty/testIdentifier -d '{"URL": "c576hhj7a88d99b0b23dc3htr0v","Description": "Sample Pagerduty Event API V2 integration key"}'`
+```
+curl -v -H "Content-Type: application/json" -X PUT $APPLINK/pagerduty/testIdentifier -d '{"URL": "c576hhj7a88d99b0b23dc3htr0v","Description": "Sample Pagerduty Event API V2 integration key"}'
+```
 
 List out the existing routes and respective Teams or Pagerduty mapping information 
-`curl -v -X GET $APPLINK/routes`
+```
+curl -v -X GET $APPLINK/routes
+```
 
 Remove/Delete the existing route mapping (HTTP 200 response code is expected)
-`curl -v -X DELETE $APPLINK/teams/testIdentifier`
+```
+curl -v -X DELETE $APPLINK/teams/testIdentifier
+```
 OR
-`curl -v -X DELETE $APPLINK/pagerduty/testIdentifier`
+```
+curl -v -X DELETE $APPLINK/pagerduty/testIdentifier
+```
 
 Post call to either open incident in PagerDuty or post message in Teams. This would be the webhook added in PCF Event Alert and called by EventAlert (HTTP 200 response code is expected)
 ```
