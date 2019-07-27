@@ -188,14 +188,14 @@ const getStatement = "SELECT * FROM route_mapping WHERE identifier = ? and route
 
 // GetRoute retrieves a Route by its identifier.
 func (db *mysqlDB) getRoute(identifier string, routeType string) (*routes, error) {
-	book, err := scanRoute(db.retriveOne.QueryRow(identifier, routeType))
+	route, err := scanRoute(db.retriveOne.QueryRow(identifier, routeType))
 	if err == sql.ErrNoRows {
 		return nil, fmt.Errorf("mysql: could not find route with identifier %s of type %s", identifier, routeType)
 	}
 	if err != nil {
 		return nil, fmt.Errorf("mysql: could not get route: %v", err)
 	}
-	return book, nil
+	return route, nil
 }
 
 const insertStatement = `

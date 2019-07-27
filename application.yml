@@ -1,0 +1,9 @@
+---
+# Flag to run single instance mode without mysql datastore
+enable_mysql: False
+
+#Following values are skipped if enable_mysql is set to true
+notifications:
+- name: pt-paas
+  teams: https://outlook.office.com/webhook/65f1d5e3-e0fa-4b09-926e-485768a8bb7d@348a1296-55b6-466e-a7af-4ad1a1b79713/IncomingWebhook/9fca4cb825da44ec98c8bb316ae61235/5f51a289-08e8-4b93-8338-5a28e0b3ba3b
+  pagerduty: a898ca6fe43d419ea6e245a974dbc6fe

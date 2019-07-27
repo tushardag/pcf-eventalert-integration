@@ -18,7 +18,15 @@ const (
 func (rh *RequestHandler) PagerDutyAlert(w http.ResponseWriter, r *http.Request) {
 	//pulling mux variable
 	vars := mux.Vars(r)
-	route, err := rh.dbConn.getRoute(vars["identifier"], pagerdutyType)
+
+	var route *routes
+	var err error
+	if rh.applConfig.EnableMysql {
+		route, err = rh.dbConn.getRoute(vars["identifier"], pagerdutyType)
+	} else {
+		route, err = rh.applConfig.getRoute(vars["identifier"], pagerdutyType)
+	}
+
 	if err != nil {
 		log.Printf("Unable to pull webhook URL for : " + vars["identifier"])
 		// Write an error and stop the handler chain
@@ -37,13 +45,14 @@ func (rh *RequestHandler) PagerDutyAlert(w http.ResponseWriter, r *http.Request)
 
 	// fmt.Fprint(w, "Value of Person in function :", incomingMsg)
 	fmt.Printf("%s EventAlert message received for: %s", incomingMsg.Metadata.Status, incomingMsg.Metadata.EventDescription)
-	fmt.Println("Publishing message to PagerDuty " + vars["identifier"])
+	fmt.Println("Publishing message to PagerDuty " + vars["identifier"] + " for Key# " + route.PostURL)
 	//Building the message body to post a call for MSTeams webhook
 	//Reference fields https://docs.microsoft.com/en-us/outlook/actionable-messages/card-reference
-	err = helpers.CompilePagerDutyMessage(incomingMsg, route.PostURL).CreateIncident()
-	if err != nil {
-		log.Printf("Error in opening Incident in PagerDuty: %s\n", err)
-		http.Error(w, "Unable to open Incident in PagerDuty.", http.StatusInternalServerError)
-		return
-	}
+	// err = helpers.CompilePagerDutyMessage(incomingMsg, route.PostURL).CreateIncident()
+	// if err != nil {
+	// 	log.Printf("Error in opening Incident in PagerDuty: %s\n", err)
+	// 	http.Error(w, "Unable to open Incident in PagerDuty.", http.StatusInternalServerError)
+	// 	return
+	// }
+
 }

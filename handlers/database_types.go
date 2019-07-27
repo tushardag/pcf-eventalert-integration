@@ -10,14 +10,6 @@ type MySQLConfig struct {
 	Port int
 }
 
-// Routes holds metadata about a route mapping records.
-type routes struct {
-	Identifier  string
-	RouteType   string
-	PostURL     string
-	Description string
-}
-
 // MappingDatabase provides thread-safe access to a database of mapping records.
 type mappingDatabase interface {
 	// ListRoutes returns a list of all available route mapping

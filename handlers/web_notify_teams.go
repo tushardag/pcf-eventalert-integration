@@ -19,7 +19,13 @@ const (
 func (rh *RequestHandler) MSTeamsAlert(w http.ResponseWriter, r *http.Request) {
 	//pulling mux variable
 	vars := mux.Vars(r)
-	route, err := rh.dbConn.getRoute(vars["identifier"], teamsType)
+	var route *routes
+	var err error
+	if rh.applConfig.EnableMysql {
+		route, err = rh.dbConn.getRoute(vars["identifier"], teamsType)
+	} else {
+		route, err = rh.applConfig.getRoute(vars["identifier"], teamsType)
+	}
 	if err != nil {
 		log.Printf("Unable to pull webhook URL for : " + vars["identifier"])
 		// Write an error and stop the handler chain
@@ -41,12 +47,13 @@ func (rh *RequestHandler) MSTeamsAlert(w http.ResponseWriter, r *http.Request) {
 
 	//Building the message body to post a call for MSTeams webhook
 	//Reference fields https://docs.microsoft.com/en-us/outlook/actionable-messages/card-reference
-	fmt.Println("Publishing message to Teams " + vars["identifier"])
-	if err := helpers.CompileTeamsMessage(incomingMsg).PostMessage(route.PostURL); err != nil {
-		log.Printf("Error in publishing message to Teams: %s\n", err)
-		http.Error(w, "Unable to publish message to Teams", http.StatusInternalServerError)
-		return
-	}
+	fmt.Println("Publishing message to Teams " + vars["identifier"] + " with URL - " + route.PostURL)
+
+	// if err := helpers.CompileTeamsMessage(incomingMsg).PostMessage(route.PostURL); err != nil {
+	// 	log.Printf("Error in publishing message to Teams: %s\n", err)
+	// 	http.Error(w, "Unable to publish message to Teams", http.StatusInternalServerError)
+	// 	return
+	// }
 }
 
 //BuildMessage ... building the message based on the incoming msg fields

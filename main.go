@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -17,17 +18,26 @@ import (
 
 func main() {
 	fmt.Println("Starting up the pcf-eventalert-integration server...")
-	fmt.Println("Connecting to the EventRouteMapping DB and initializing the base")
+	fmt.Println("Validating Application config.")
+
+	ymlFile, err := ioutil.ReadFile("application.yml")
+	if err != nil {
+		log.Println("Error in reading application config.")
+		log.Fatalln(err)
+	}
+
 	// For the local instance of mysql, update the username,
 	// password and instance connection string. When running locally,
 	// localhost:3306 is used
-	mysqlDBconfig, err := configureMySQL()
-	fmt.Printf("Connecting to MySQL Host %s on port %d \n", mysqlDBconfig.Host, mysqlDBconfig.Port)
-	requestHandler, err := handlers.RequestHandlerInit(mysqlDBconfig)
+	var mysqlDBconfig handlers.MySQLConfig
+	mysqlDBconfig, err = configureMySQL()
+	//fmt.Printf("Connecting to MySQL Host %s on port %d \n", mysqlDBconfig.Host, mysqlDBconfig.Port)
+	requestHandler, err := handlers.RequestHandlerInit(mysqlDBconfig, ymlFile)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	defer requestHandler.CloseDB()
+
 	fmt.Println("Initializing the webserver process.")
 	router := mux.NewRouter()
 
@@ -52,10 +62,11 @@ func main() {
 
 	// Fetch the list of existing route mappings from DB in JSON format
 	router.HandleFunc("/routes", requestHandler.ListMappings).Methods("GET")
-	// Teams routes
-	router.HandleFunc("/{type}/{identifier}", requestHandler.CreatMapping).Methods("PUT")
-	router.HandleFunc("/{type}/{identifier}", requestHandler.RemoveMapping).Methods("DELETE")
-
+	// Supress the mapping management for non-db mode
+	if requestHandler.DBinUse() {
+		router.HandleFunc("/{type}/{identifier}", requestHandler.CreatMapping).Methods("PUT")
+		router.HandleFunc("/{type}/{identifier}", requestHandler.RemoveMapping).Methods("DELETE")
+	}
 	//MS Teams Event routing
 	router.HandleFunc("/teams/{identifier}", requestHandler.MSTeamsAlert).Methods("POST")
 	//PagerDuty Event routing
